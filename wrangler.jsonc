@@ -7,7 +7,9 @@
     {
       "binding": "DB",
       "database_name": "preplan",
-      "database_id": "local-dev-placeholder",
+      "database_id": "291d38b3-0784-4e6b-9bcf-23c9bf67e1c0",
+      "remote": true,
+      "migrations_dir": "./drizzle/migrations",
     },
   ],
 }

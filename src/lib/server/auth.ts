@@ -6,7 +6,7 @@ import { decodeIdToken, generateCodeVerifier, generateState } from "arctic";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { getLocalDb } from "@/db/local";
+import { getDb } from "@/db/getDb";
 import { users } from "@/db/schema";
 import { getGoogleOAuth } from "@/lib/auth";
 import { requireAuth } from "@/lib/requireAuth";
@@ -47,7 +47,7 @@ export const $initiateGoogleAuth = createServerFn({ method: "GET" }).handler(
 
 export const $handleCallback = createServerFn({ method: "GET" }).handler(
   async () => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const request = getRequest();
     const url = new URL(request.url);
     const code = url.searchParams.get("code");
@@ -145,7 +145,7 @@ export const $handleCallback = createServerFn({ method: "GET" }).handler(
 );
 
 export const $logout = createServerFn({ method: "POST" }).handler(async () => {
-  const db = await getLocalDb();
+  const db = await getDb();
   const request = getRequest();
   const sessionId = getSessionCookie(request);
   if (sessionId) {

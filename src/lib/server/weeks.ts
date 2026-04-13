@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { getLocalDb } from "@/db/local";
+import { getDb } from "@/db/getDb";
 import { chains, events } from "@/db/schema";
 import { requireAuth } from "@/lib/requireAuth";
 import { type ChainWithEvents, getChainsByWeek } from "@/lib/server/chains";
@@ -30,7 +30,7 @@ export async function copyWeek(
   targetWeekStart: string,
   offsetMinutes?: number,
 ): Promise<ChainWithEvents[]> {
-  const db = await getLocalDb();
+  const db = await getDb();
   const sourceWeek = await getChainsByWeek(userId, sourceWeekStart);
 
   const created: ChainWithEvents[] = [];
@@ -131,7 +131,7 @@ export const $copyWeek = createServerFn({ method: "POST" })
     const user = await requireAuth();
 
     if (data.clearExisting) {
-      const db = await getLocalDb();
+      const db = await getDb();
       const existing = await getChainsByWeek(user.id, data.targetWeekStart);
       for (const dayChains of Object.values(existing)) {
         for (const chain of dayChains) {

@@ -1,6 +1,6 @@
 import { asc, eq } from "drizzle-orm";
 
-import type { AnyDb } from "@/db/index";
+import type { DbClient } from "@/db/index";
 import { chains, events, users } from "@/db/schema";
 import { deriveEventTimes } from "@/lib/time";
 
@@ -19,7 +19,7 @@ import {
  * Returns the current (or newly refreshed) access token.
  */
 async function refreshAccessTokenIfNeeded(
-  db: AnyDb,
+  db: DbClient,
   user: typeof users.$inferSelect,
 ): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
@@ -77,7 +77,7 @@ async function refreshAccessTokenIfNeeded(
  * Best-effort — errors are caught and logged.
  */
 export async function syncChainToCalendar(
-  db: AnyDb,
+  db: DbClient,
   userId: string,
   chainId: string,
 ): Promise<void> {
@@ -167,7 +167,7 @@ export async function syncChainToCalendar(
  * Sync all chains for a specific day.
  */
 export async function syncDayToCalendar(
-  db: AnyDb,
+  db: DbClient,
   userId: string,
   day: string,
 ): Promise<void> {
@@ -197,7 +197,7 @@ export async function syncDayToCalendar(
  * Called before a chain is deleted from DB.
  */
 export async function unsyncChain(
-  db: AnyDb,
+  db: DbClient,
   userId: string,
   chainId: string,
 ): Promise<void> {

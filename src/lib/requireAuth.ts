@@ -1,12 +1,12 @@
 import { redirect } from "@tanstack/react-router";
 import { getRequest } from "@tanstack/react-start/server";
 
-import { getLocalDb } from "@/db/local";
+import { getDb } from "@/db/getDb";
 import type { User } from "@/db/schema";
 import { getSessionCookie, getSessionUser } from "@/lib/session";
 
 export async function requireAuth(): Promise<User> {
-  const db = await getLocalDb();
+  const db = await getDb();
   const request = getRequest();
   const sessionId = getSessionCookie(request);
   if (!sessionId) throw redirect({ href: "/auth/google" });

@@ -9,8 +9,8 @@ const getAuthState = createServerFn({ method: "GET" }).handler(async () => {
   const sessionId = getSessionCookie(request);
   if (!sessionId) return { authenticated: false as const };
 
-  const { getLocalDb } = await import("@/db/local");
-  const db = await getLocalDb();
+  const { getDb } = await import("@/db/getDb");
+  const db = await getDb();
   const user = await getSessionUser(db, sessionId);
   if (!user) return { authenticated: false as const };
 

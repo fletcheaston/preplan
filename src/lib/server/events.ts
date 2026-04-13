@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, eq, max } from "drizzle-orm";
 import { z } from "zod";
 
-import { getLocalDb } from "@/db/local";
+import { getDb } from "@/db/getDb";
 import { chains, events } from "@/db/schema";
 import type { Event } from "@/db/schema";
 import { requireAuth } from "@/lib/requireAuth";
@@ -24,7 +24,7 @@ export async function createEvent(
     throw new Error("durationMinutes must be between 15 and 720");
   }
 
-  const db = await getLocalDb();
+  const db = await getDb();
   // Validate chain ownership
   const chain = await db
     .select()
@@ -78,7 +78,7 @@ export async function updateEvent(
     }
   }
 
-  const db = await getLocalDb();
+  const db = await getDb();
   // Validate event + chain ownership
   const existing = await db
     .select({ event: events, chainUserId: chains.userId })
@@ -110,7 +110,7 @@ export async function deleteEvent(
   eventId: string,
   userId: string,
 ): Promise<void> {
-  const db = await getLocalDb();
+  const db = await getDb();
   // Validate event + chain ownership
   const existing = await db
     .select({ event: events, chainUserId: chains.userId })
@@ -134,7 +134,7 @@ export async function reorderEvents(
   userId: string,
   orderedEventIds: string[],
 ): Promise<void> {
-  const db = await getLocalDb();
+  const db = await getDb();
   // Validate chain ownership
   const chain = await db
     .select()
@@ -189,7 +189,7 @@ export const $createEvent = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     const created = await createEvent(data.chainId, user.id, {
       name: data.name,
@@ -213,7 +213,7 @@ export const $updateEvent = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     const { eventId, ...rest } = data;
     const updated = await updateEvent(eventId, user.id, rest);
@@ -228,7 +228,7 @@ export const $updateEvent = createServerFn({ method: "POST" })
 export const $deleteEvent = createServerFn({ method: "POST" })
   .inputValidator(z.object({ eventId: z.string().uuid() }))
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     // Fetch event first to get chainId for post-delete sync
     const existing = await db
@@ -254,7 +254,7 @@ export const $reorderEvents = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     await reorderEvents(data.chainId, user.id, data.orderedEventIds);
     try {

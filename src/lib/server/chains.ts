@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, asc, eq, gte, lte } from "drizzle-orm";
 import { z } from "zod";
 
-import { getLocalDb } from "@/db/local";
+import { getDb } from "@/db/getDb";
 import { chains, events } from "@/db/schema";
 import type { Chain, Event } from "@/db/schema";
 import { requireAuth } from "@/lib/requireAuth";
@@ -19,7 +19,7 @@ export async function getChainsByDay(
   userId: string,
   day: string,
 ): Promise<ChainWithEvents[]> {
-  const db = await getLocalDb();
+  const db = await getDb();
   const rows = await db
     .select()
     .from(chains)
@@ -50,7 +50,7 @@ export async function getChainsByWeek(
   end.setDate(end.getDate() + 6);
   const weekEnd = end.toISOString().slice(0, 10);
 
-  const db = await getLocalDb();
+  const db = await getDb();
   const rows = await db
     .select()
     .from(chains)
@@ -101,7 +101,7 @@ export async function createChain(
     direction: "forward" | "backward";
   },
 ): Promise<Chain> {
-  const db = await getLocalDb();
+  const db = await getDb();
   const id = crypto.randomUUID();
   const now = new Date();
 
@@ -131,7 +131,7 @@ export async function updateChain(
     direction: "forward" | "backward";
   }>,
 ): Promise<Chain> {
-  const db = await getLocalDb();
+  const db = await getDb();
   const existing = await db
     .select()
     .from(chains)
@@ -160,7 +160,7 @@ export async function deleteChain(
   chainId: string,
   userId: string,
 ): Promise<void> {
-  const db = await getLocalDb();
+  const db = await getDb();
   const existing = await db
     .select()
     .from(chains)
@@ -201,7 +201,7 @@ export const $createChain = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     const newChain = await createChain(user.id, data);
     try {
@@ -222,7 +222,7 @@ export const $updateChain = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     const { chainId, ...rest } = data;
     const updated = await updateChain(chainId, user.id, rest);
@@ -237,7 +237,7 @@ export const $updateChain = createServerFn({ method: "POST" })
 export const $deleteChain = createServerFn({ method: "POST" })
   .inputValidator(z.object({ chainId: z.string().uuid() }))
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     try {
       await unsyncChain(db, user.id, data.chainId);
@@ -257,7 +257,7 @@ export const $copyDay = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
 
     if (data.clearExisting) {
@@ -335,7 +335,7 @@ export const $copyDay = createServerFn({ method: "POST" })
 export const $triggerManualSync = createServerFn({ method: "POST" })
   .inputValidator(z.object({ chainId: z.string().uuid() }))
   .handler(async ({ data }) => {
-    const db = await getLocalDb();
+    const db = await getDb();
     const user = await requireAuth();
     await syncChainToCalendar(db, user.id, data.chainId);
   });
