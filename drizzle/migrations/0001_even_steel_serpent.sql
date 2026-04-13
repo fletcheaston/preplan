@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `gcal_calendar_id` text;

@@ -9,12 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlanRouteImport } from './routes/plan'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PlanIndexRouteImport } from './routes/plan/index'
+import { Route as PlanDateRouteImport } from './routes/plan/$date'
 import { Route as DemoDrizzleRouteImport } from './routes/demo/drizzle'
+import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
+import { Route as AuthGoogleRouteImport } from './routes/auth/google'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as PlanWeekWeekStartRouteImport } from './routes/plan/week/$weekStart'
 import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
 import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
 
+const PlanRoute = PlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -25,10 +37,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanIndexRoute = PlanIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PlanRoute,
+} as any)
+const PlanDateRoute = PlanDateRouteImport.update({
+  id: '/$date',
+  path: '/$date',
+  getParentRoute: () => PlanRoute,
+} as any)
 const DemoDrizzleRoute = DemoDrizzleRouteImport.update({
   id: '/demo/drizzle',
   path: '/demo/drizzle',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLogoutRoute = AuthLogoutRouteImport.update({
+  id: '/auth/logout',
+  path: '/auth/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthGoogleRoute = AuthGoogleRouteImport.update({
+  id: '/auth/google',
+  path: '/auth/google',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanWeekWeekStartRoute = PlanWeekWeekStartRouteImport.update({
+  id: '/week/$weekStart',
+  path: '/week/$weekStart',
+  getParentRoute: () => PlanRoute,
 } as any)
 const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
   id: '/demo/form/simple',
@@ -44,52 +86,96 @@ const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/plan': typeof PlanRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/google': typeof AuthGoogleRoute
+  '/auth/logout': typeof AuthLogoutRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
+  '/plan/$date': typeof PlanDateRoute
+  '/plan/': typeof PlanIndexRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
+  '/plan/week/$weekStart': typeof PlanWeekWeekStartRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/google': typeof AuthGoogleRoute
+  '/auth/logout': typeof AuthLogoutRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
+  '/plan/$date': typeof PlanDateRoute
+  '/plan': typeof PlanIndexRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
+  '/plan/week/$weekStart': typeof PlanWeekWeekStartRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/plan': typeof PlanRouteWithChildren
+  '/auth/callback': typeof AuthCallbackRoute
+  '/auth/google': typeof AuthGoogleRoute
+  '/auth/logout': typeof AuthLogoutRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
+  '/plan/$date': typeof PlanDateRoute
+  '/plan/': typeof PlanIndexRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
+  '/plan/week/$weekStart': typeof PlanWeekWeekStartRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/plan'
+    | '/auth/callback'
+    | '/auth/google'
+    | '/auth/logout'
     | '/demo/drizzle'
+    | '/plan/$date'
+    | '/plan/'
     | '/demo/form/address'
     | '/demo/form/simple'
+    | '/plan/week/$weekStart'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/auth/callback'
+    | '/auth/google'
+    | '/auth/logout'
     | '/demo/drizzle'
+    | '/plan/$date'
+    | '/plan'
     | '/demo/form/address'
     | '/demo/form/simple'
+    | '/plan/week/$weekStart'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/plan'
+    | '/auth/callback'
+    | '/auth/google'
+    | '/auth/logout'
     | '/demo/drizzle'
+    | '/plan/$date'
+    | '/plan/'
     | '/demo/form/address'
     | '/demo/form/simple'
+    | '/plan/week/$weekStart'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  PlanRoute: typeof PlanRouteWithChildren
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthGoogleRoute: typeof AuthGoogleRoute
+  AuthLogoutRoute: typeof AuthLogoutRoute
   DemoDrizzleRoute: typeof DemoDrizzleRoute
   DemoFormAddressRoute: typeof DemoFormAddressRoute
   DemoFormSimpleRoute: typeof DemoFormSimpleRoute
@@ -97,6 +183,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/plan': {
+      id: '/plan'
+      path: '/plan'
+      fullPath: '/plan'
+      preLoaderRoute: typeof PlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -111,12 +204,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/plan/': {
+      id: '/plan/'
+      path: '/'
+      fullPath: '/plan/'
+      preLoaderRoute: typeof PlanIndexRouteImport
+      parentRoute: typeof PlanRoute
+    }
+    '/plan/$date': {
+      id: '/plan/$date'
+      path: '/$date'
+      fullPath: '/plan/$date'
+      preLoaderRoute: typeof PlanDateRouteImport
+      parentRoute: typeof PlanRoute
+    }
     '/demo/drizzle': {
       id: '/demo/drizzle'
       path: '/demo/drizzle'
       fullPath: '/demo/drizzle'
       preLoaderRoute: typeof DemoDrizzleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/logout': {
+      id: '/auth/logout'
+      path: '/auth/logout'
+      fullPath: '/auth/logout'
+      preLoaderRoute: typeof AuthLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/google': {
+      id: '/auth/google'
+      path: '/auth/google'
+      fullPath: '/auth/google'
+      preLoaderRoute: typeof AuthGoogleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plan/week/$weekStart': {
+      id: '/plan/week/$weekStart'
+      path: '/week/$weekStart'
+      fullPath: '/plan/week/$weekStart'
+      preLoaderRoute: typeof PlanWeekWeekStartRouteImport
+      parentRoute: typeof PlanRoute
     }
     '/demo/form/simple': {
       id: '/demo/form/simple'
@@ -135,9 +270,27 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PlanRouteChildren {
+  PlanDateRoute: typeof PlanDateRoute
+  PlanIndexRoute: typeof PlanIndexRoute
+  PlanWeekWeekStartRoute: typeof PlanWeekWeekStartRoute
+}
+
+const PlanRouteChildren: PlanRouteChildren = {
+  PlanDateRoute: PlanDateRoute,
+  PlanIndexRoute: PlanIndexRoute,
+  PlanWeekWeekStartRoute: PlanWeekWeekStartRoute,
+}
+
+const PlanRouteWithChildren = PlanRoute._addFileChildren(PlanRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  PlanRoute: PlanRouteWithChildren,
+  AuthCallbackRoute: AuthCallbackRoute,
+  AuthGoogleRoute: AuthGoogleRoute,
+  AuthLogoutRoute: AuthLogoutRoute,
   DemoDrizzleRoute: DemoDrizzleRoute,
   DemoFormAddressRoute: DemoFormAddressRoute,
   DemoFormSimpleRoute: DemoFormSimpleRoute,
