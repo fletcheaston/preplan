@@ -2,6 +2,8 @@
   "name": "preplan",
   "compatibility_date": "2024-09-23",
   "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
   "main": "dist/server/server.js",
 	"assets": {
 		"directory": "dist/client"
