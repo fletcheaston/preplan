@@ -10,10 +10,15 @@ const config = defineConfig({
   resolve: { tsconfigPaths: true },
   plugins: [devtools(), tailwindcss(), tanstackStart(), viteReact()],
   ssr: {
-    external: ["better-sqlite3"],
+    external: ["better-sqlite3", "cloudflare:workers"],
   },
   optimizeDeps: {
     exclude: ["better-sqlite3"],
+  },
+  build: {
+    rollupOptions: {
+      external: ["cloudflare:workers"],
+    },
   },
 });
 

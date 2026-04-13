@@ -1,17 +1,22 @@
 // Unified database access — works in both Cloudflare Workers (D1) and local dev (better-sqlite3).
-// Returns DbClient type (D1 drizzle) which is API-compatible with BetterSQLite3Database.
-import { getCfEnv } from "./cf-env";
-import type { DbClient } from "./index";
+import type { DbClient, Env } from "./index";
 import { getDb as getD1Db } from "./index";
 
 export async function getDb(): Promise<DbClient> {
-  // Check for Cloudflare D1 binding first
-  const env = getCfEnv();
-  if (env?.DB) {
-    return getD1Db(env);
+  // Try the Cloudflare Workers runtime first via cloudflare:workers module.
+  // This only resolves when running on Cloudflare — import will fail in local dev.
+  try {
+    const cf = (await import("cloudflare:workers" as string)) as {
+      env: Env;
+    };
+    if (cf.env?.DB) {
+      return getD1Db(cf.env);
+    }
+  } catch {
+    // Not in Cloudflare Workers runtime — fall through
   }
 
   // Fall back to local better-sqlite3 for dev
   const { getLocalDb } = await import("./local");
-  return getLocalDb() as unknown as Promise<DbClient>;
+  return getLocalDb() as unknown as DbClient;
 }
