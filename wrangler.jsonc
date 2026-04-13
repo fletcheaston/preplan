@@ -4,6 +4,12 @@
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
   "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "preplan.fletcheaston.com",
+      "custom_domain": true,
+    },
+  ],
   "main": "dist/server/server.js",
 	"assets": {
 		"directory": "dist/client"
