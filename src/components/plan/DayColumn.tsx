@@ -42,7 +42,7 @@ export function DayColumn({ date, chains, onUpdate }: DayColumnProps) {
   return (
     <div
       className={[
-        "flex min-h-0 flex-col rounded-xl border transition-colors",
+        "flex flex-col rounded-xl border transition-colors",
         isToday
           ? "border-[var(--lagoon)] bg-[rgba(79,184,178,0.06)]"
           : "border-[var(--line)] bg-[rgba(255,255,255,0.18)]",
@@ -81,9 +81,9 @@ export function DayColumn({ date, chains, onUpdate }: DayColumnProps) {
       </button>
 
       {/* Chain cards */}
-      <div className="flex flex-1 flex-col gap-1.5 overflow-y-auto p-1.5">
+      <div className="flex flex-col gap-1.5 p-1.5">
         {chains.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center py-4">
+          <div className="flex items-center justify-center py-4">
             <span className="text-center text-[10px] leading-relaxed text-[var(--sea-ink-soft)]">
               No chains
             </span>

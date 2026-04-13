@@ -1,7 +1,5 @@
 import { Link } from "@tanstack/react-router";
 
-import ThemeToggle from "./ThemeToggle";
-
 function getThisMonday(): string {
   const today = new Date().toISOString().split("T")[0];
   const d = new Date(`${today}T12:00:00Z`);
@@ -35,11 +33,7 @@ export default function Header() {
           </Link>
         </h2>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:ml-0 sm:gap-2">
-          <ThemeToggle />
-        </div>
-
-        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold sm:order-2 sm:w-auto sm:flex-nowrap sm:pb-0">
+        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold sm:order-2 sm:ml-auto sm:w-auto sm:flex-nowrap sm:pb-0">
           <Link
             to="/"
             className="nav-link"

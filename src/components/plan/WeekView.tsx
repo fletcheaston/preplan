@@ -35,7 +35,7 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
       {/* Desktop: 7-column grid */}
       <main className="flex-1 overflow-x-auto">
         {/* Desktop layout */}
-        <div className="hidden min-h-[calc(100dvh-60px)] gap-2 p-3 md:grid md:grid-cols-7">
+        <div className="hidden items-start gap-2 p-3 md:grid md:grid-cols-7">
           {weekDates.map((date) => (
             <DayColumn
               key={date}
