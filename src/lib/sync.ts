@@ -2,6 +2,7 @@ import { asc, eq } from "drizzle-orm";
 
 import type { DbClient } from "@/db/index";
 import { chains, events, users } from "@/db/schema";
+import { getSecret } from "@/lib/getSecret";
 import { deriveEventTimes } from "@/lib/time";
 
 import {
@@ -46,8 +47,8 @@ async function refreshAccessTokenIfNeeded(
     body: new URLSearchParams({
       grant_type: "refresh_token",
       refresh_token: user.googleRefreshToken,
-      client_id: process.env.GOOGLE_CLIENT_ID ?? "",
-      client_secret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      client_id: getSecret("GOOGLE_CLIENT_ID"),
+      client_secret: getSecret("GOOGLE_CLIENT_SECRET"),
     }),
   });
 

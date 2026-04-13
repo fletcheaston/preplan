@@ -9,6 +9,7 @@ import { z } from "zod";
 import { getDb } from "@/db/getDb";
 import { users } from "@/db/schema";
 import { getGoogleOAuth } from "@/lib/auth";
+import { getSecret } from "@/lib/getSecret";
 import { requireAuth } from "@/lib/requireAuth";
 import {
   clearSessionCookie,
@@ -24,8 +25,8 @@ export const $initiateGoogleAuth = createServerFn({ method: "GET" }).handler(
     const codeVerifier = generateCodeVerifier();
 
     const google = getGoogleOAuth({
-      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
-      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      GOOGLE_CLIENT_ID: getSecret("GOOGLE_CLIENT_ID"),
+      GOOGLE_CLIENT_SECRET: getSecret("GOOGLE_CLIENT_SECRET"),
     });
 
     const url = google.createAuthorizationURL(state, codeVerifier, [
@@ -78,8 +79,8 @@ export const $handleCallback = createServerFn({ method: "GET" }).handler(
     }
 
     const google = getGoogleOAuth({
-      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
-      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      GOOGLE_CLIENT_ID: getSecret("GOOGLE_CLIENT_ID"),
+      GOOGLE_CLIENT_SECRET: getSecret("GOOGLE_CLIENT_SECRET"),
     });
 
     const tokens = await google.validateAuthorizationCode(code, codeVerifier);
