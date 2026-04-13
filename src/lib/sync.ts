@@ -5,7 +5,6 @@ import { chains, events, users } from "@/db/schema";
 import { deriveEventTimes } from "@/lib/time";
 
 import {
-  buildEventDateTimes,
   deleteCalendarEvent,
   ensurePreplanCalendar,
   upsertCalendarEvent,
@@ -134,18 +133,14 @@ export async function syncChainToCalendar(
       const dbEvent = chainEvents.find((e) => e.id === derived.eventId);
       if (!dbEvent) continue;
 
-      const { startDateTime, endDateTime } = buildEventDateTimes(
-        derived.startDay,
-        derived.startTime,
-        derived.endDay,
-        derived.endTime,
-      );
-
       const gcalEventId = await upsertCalendarEvent(accessToken, calendarId, {
         gcalEventId: dbEvent.gcalEventId ?? null,
         summary: derived.name,
-        startDateTime,
-        endDateTime,
+        startDate: derived.startDay,
+        startTime: derived.startTime,
+        endDate: derived.endDay,
+        endTime: derived.endTime,
+        timeZone: dbEvent.timezone,
       });
 
       // If this was a create (gcalEventId was null), save the new ID

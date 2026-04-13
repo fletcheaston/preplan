@@ -65,39 +65,39 @@ export function SortableEventItem({
       <div
         ref={setNodeRef}
         style={style}
-        className="group flex min-h-[44px] items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-[rgba(79,184,178,0.06)]"
+        className="group flex min-h-[44px] items-center gap-2 border-b border-[var(--rule-light)] px-2 py-2 last:border-b-0"
       >
         {/* Drag handle */}
         <div
           {...attributes}
           {...listeners}
           data-drag-handle
-          className="flex shrink-0 cursor-grab items-center text-[var(--sea-ink-soft)] opacity-40 group-hover:opacity-70 active:cursor-grabbing"
+          className="flex shrink-0 cursor-grab items-center text-[var(--ink-soft)] opacity-30 group-hover:opacity-60 active:cursor-grabbing"
         >
           <GripVertical className="size-4" />
         </div>
 
         {/* Event name */}
         <div className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-medium text-[var(--sea-ink)]">
+          <span className="block truncate text-base font-medium text-[var(--ink)]">
             {event.name}
           </span>
           <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-            {/* Duration chip */}
-            <span className="inline-flex items-center rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-2 py-0.5 text-xs font-medium text-[var(--sea-ink-soft)]">
+            {/* Duration as inline mono text */}
+            <span className="font-mono text-sm text-[var(--ink-soft)]">
               {formatDuration(event.durationMinutes)}
             </span>
-            {/* Time display */}
-            <span className="text-xs text-[var(--sea-ink-soft)]">
-              {formatDisplayTime(derivedEvent.startTime)} →{" "}
+            {/* Time display in mono */}
+            <span className="font-mono text-sm text-[var(--ink-soft)]">
+              {formatDisplayTime(derivedEvent.startTime)} {"\u2192"}{" "}
               {formatDisplayTime(derivedEvent.endTime)}
             </span>
             {/* Cross-midnight indicators */}
             {isCrossMidnight && (
-              <span className="text-xs font-medium text-[var(--lagoon-deep)]">
-                {isPrevDay && "↑ prev day"}
-                {isNextDay && !isPrevDay && "↓ next day"}
-                {isPrevDay && isNextDay && "↑↓ multi-day"}
+              <span className="text-xs font-medium text-[var(--terracotta)]">
+                {isPrevDay && "\u2191 prev day"}
+                {isNextDay && !isPrevDay && "\u2193 next day"}
+                {isPrevDay && isNextDay && "\u2191\u2193 multi-day"}
               </span>
             )}
           </div>

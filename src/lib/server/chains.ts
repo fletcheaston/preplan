@@ -247,6 +247,91 @@ export const $deleteChain = createServerFn({ method: "POST" })
     return deleteChain(data.chainId, user.id);
   });
 
+export const $copyDay = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      sourceDay: isoDate,
+      targetDay: isoDate,
+      offsetMinutes: z.number().int().min(-720).max(720).optional(),
+      clearExisting: z.boolean().optional(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const db = await getLocalDb();
+    const user = await requireAuth();
+
+    if (data.clearExisting) {
+      const existing = await getChainsByDay(user.id, data.targetDay);
+      for (const chain of existing) {
+        await db
+          .delete(chains)
+          .where(and(eq(chains.id, chain.id), eq(chains.userId, user.id)));
+      }
+    }
+
+    const sourceChains = await getChainsByDay(user.id, data.sourceDay);
+
+    const created: ChainWithEvents[] = [];
+    for (const source of sourceChains) {
+      let anchorTime = source.anchorTime;
+      if (data.offsetMinutes) {
+        const [h, m] = anchorTime.split(":").map(Number);
+        const total =
+          (((h * 60 + m + data.offsetMinutes) % 1440) + 1440) % 1440;
+        anchorTime = `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+      }
+
+      const chainId = crypto.randomUUID();
+      const now = new Date();
+      await db.insert(chains).values({
+        id: chainId,
+        userId: user.id,
+        day: data.targetDay,
+        name: source.name,
+        anchorTime,
+        direction: source.direction,
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      const newEvents: Event[] = [];
+      for (const event of source.events) {
+        const eventId = crypto.randomUUID();
+        await db.insert(events).values({
+          id: eventId,
+          chainId,
+          name: event.name,
+          durationMinutes: event.durationMinutes,
+          timezone: event.timezone,
+          sortOrder: event.sortOrder,
+          gcalEventId: null,
+          createdAt: now,
+          updatedAt: now,
+        });
+        newEvents.push({
+          id: eventId,
+          chainId,
+          name: event.name,
+          durationMinutes: event.durationMinutes,
+          timezone: event.timezone,
+          sortOrder: event.sortOrder,
+          gcalEventId: null,
+          createdAt: now,
+          updatedAt: now,
+        });
+      }
+
+      const newChain = await db
+        .select()
+        .from(chains)
+        .where(eq(chains.id, chainId))
+        .get();
+      if (newChain) created.push({ ...newChain, events: newEvents });
+    }
+
+    return created;
+  });
+
 export const $triggerManualSync = createServerFn({ method: "POST" })
   .inputValidator(z.object({ chainId: z.string().uuid() }))
   .handler(async ({ data }) => {

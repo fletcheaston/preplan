@@ -2,24 +2,30 @@ import { useState } from "react";
 
 import { useNavigate } from "@tanstack/react-router";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import { addDays } from "@/lib/time";
 
 type DayNavigationProps = {
   date: string; // ISO date YYYY-MM-DD
 };
 
-function formatDisplayDate(isoDate: string): string {
-  // Use T12:00:00Z to avoid DST issues
+function parseDateParts(isoDate: string): {
+  dayNum: number;
+  weekday: string;
+  monthYear: string;
+} {
   const d = new Date(`${isoDate}T12:00:00Z`);
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
+  return {
+    dayNum: d.getUTCDate(),
+    weekday: d.toLocaleDateString("en-US", {
+      weekday: "long",
+      timeZone: "UTC",
+    }),
+    monthYear: d.toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }),
+  };
 }
 
 export function DayNavigation({ date }: DayNavigationProps) {
@@ -30,35 +36,44 @@ export function DayNavigation({ date }: DayNavigationProps) {
   const prevDay = addDays(date, -1);
   const nextDay = addDays(date, 1);
 
+  const { dayNum, weekday, monthYear } = parseDateParts(date);
+
   function goTo(d: string) {
     navigate({ to: "/plan/$date", params: { date: d } });
   }
 
   return (
-    <div className="flex items-center gap-2 border-b border-[var(--line)] bg-[var(--header-bg)] px-4 py-3 backdrop-blur-md">
-      <Button
-        variant="ghost"
-        size="icon-sm"
+    <div className="flex items-center gap-3 border-b border-[var(--rule)] bg-[var(--header-bg)] px-4 py-3 backdrop-blur-sm">
+      <button
+        className="cursor-pointer bg-transparent font-mono text-lg text-[var(--ink-soft)] hover:text-[var(--ink)]"
         onClick={() => goTo(prevDay)}
         aria-label="Previous day"
       >
-        <ChevronLeft className="size-4" />
-      </Button>
+        {"\u2190"}
+      </button>
 
       <div className="relative flex-1 text-center">
         <button
-          className="rounded-md px-2 py-1 text-sm font-semibold text-[var(--sea-ink)] transition-colors hover:bg-[rgba(79,184,178,0.1)]"
+          className="cursor-pointer bg-transparent px-2 py-1 transition-colors hover:text-[var(--terracotta)]"
           onClick={() => setShowPicker((v) => !v)}
         >
-          {formatDisplayDate(date)}
+          <span className="block text-4xl leading-none font-bold text-[var(--ink)]">
+            {dayNum}
+          </span>
+          <span className="mt-1 block text-base text-[var(--ink-soft)]">
+            {weekday}
+          </span>
+          <span className="block text-sm text-[var(--ink-soft)]">
+            {monthYear}
+          </span>
         </button>
 
         {showPicker && (
-          <div className="absolute top-full left-1/2 z-50 mt-1 -translate-x-1/2 rounded-xl border border-[var(--line)] bg-[var(--surface-strong)] p-3 shadow-lg">
+          <div className="absolute top-full left-1/2 z-50 mt-1 -translate-x-1/2 rounded-lg border border-[var(--rule)] bg-[var(--white)] p-3 shadow-md">
             <input
               type="date"
               value={date}
-              className="rounded-md border border-[var(--line)] bg-transparent px-2 py-1 text-sm text-[var(--sea-ink)] outline-none focus:border-[var(--lagoon)]"
+              className="rounded border border-[var(--rule)] bg-transparent px-2 py-1 font-mono text-sm text-[var(--ink)] outline-none focus:border-[var(--terracotta)]"
               onChange={(e) => {
                 if (e.target.value) {
                   setShowPicker(false);
@@ -70,24 +85,21 @@ export function DayNavigation({ date }: DayNavigationProps) {
         )}
       </div>
 
-      <Button
-        variant="ghost"
-        size="icon-sm"
+      <button
+        className="cursor-pointer bg-transparent font-mono text-lg text-[var(--ink-soft)] hover:text-[var(--ink)]"
         onClick={() => goTo(nextDay)}
         aria-label="Next day"
       >
-        <ChevronRight className="size-4" />
-      </Button>
+        {"\u2192"}
+      </button>
 
       {date !== today && (
-        <Button
-          variant="outline"
-          size="sm"
+        <button
+          className="cursor-pointer rounded-lg border border-[var(--rule)] bg-[var(--white)] px-3 py-1.5 text-sm font-medium text-[var(--ink)] hover:border-[var(--terracotta)] hover:text-[var(--terracotta)]"
           onClick={() => goTo(today)}
-          className="ml-1 text-xs"
         >
           Today
-        </Button>
+        </button>
       )}
     </div>
   );

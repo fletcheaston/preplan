@@ -2,12 +2,12 @@ import { useState } from "react";
 
 import { useNavigate } from "@tanstack/react-router";
 
-import { Plus } from "lucide-react";
+import { Copy, Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import type { ChainWithEvents } from "@/lib/server/chains";
 
 import { AddChainDialog } from "./AddChainDialog";
+import { CopyDayDialog } from "./CopyDayDialog";
 import { DayColumnChainCard } from "./DayColumnChainCard";
 
 type DayColumnProps = {
@@ -29,6 +29,7 @@ function formatDayHeader(isoDate: string): { abbrev: string; day: number } {
 export function DayColumn({ date, chains, onUpdate }: DayColumnProps) {
   const navigate = useNavigate();
   const [addChainOpen, setAddChainOpen] = useState(false);
+  const [copyDayOpen, setCopyDayOpen] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
   const isToday = date === today;
@@ -40,40 +41,23 @@ export function DayColumn({ date, chains, onUpdate }: DayColumnProps) {
   }
 
   return (
-    <div
-      className={[
-        "flex flex-col rounded-xl border transition-colors",
-        isToday
-          ? "border-[var(--lagoon)] bg-[rgba(79,184,178,0.06)]"
-          : "border-[var(--line)] bg-[rgba(255,255,255,0.18)]",
-      ].join(" ")}
-    >
+    <div className="flex flex-col">
       {/* Day header */}
       <button
         type="button"
         onClick={handleHeaderClick}
-        className={[
-          "flex cursor-pointer flex-col items-center justify-center rounded-t-xl border-b py-2 transition-colors",
-          isToday
-            ? "border-[var(--lagoon)] bg-[rgba(79,184,178,0.12)] hover:bg-[rgba(79,184,178,0.18)]"
-            : "border-[var(--line)] hover:bg-[rgba(79,184,178,0.07)]",
-        ].join(" ")}
+        className="flex cursor-pointer flex-col items-center justify-center border-b border-[var(--rule)] py-2 transition-colors hover:bg-[var(--paper)]"
         aria-label={`Go to ${date} day view`}
       >
-        <span
-          className={[
-            "text-[10px] font-semibold tracking-wide uppercase",
-            isToday
-              ? "text-[var(--lagoon-deep)]"
-              : "text-[var(--sea-ink-soft)]",
-          ].join(" ")}
-        >
+        <span className="font-mono text-sm font-medium tracking-wider text-[var(--ink-soft)] uppercase">
           {abbrev}
         </span>
         <span
           className={[
-            "text-lg leading-none font-bold",
-            isToday ? "text-[var(--lagoon-deep)]" : "text-[var(--sea-ink)]",
+            "text-xl leading-none font-bold",
+            isToday
+              ? "text-[var(--ink)] underline decoration-[var(--terracotta)] decoration-2 underline-offset-4"
+              : "text-[var(--ink)]",
           ].join(" ")}
         >
           {day}
@@ -84,7 +68,7 @@ export function DayColumn({ date, chains, onUpdate }: DayColumnProps) {
       <div className="flex flex-col gap-1.5 p-1.5">
         {chains.length === 0 ? (
           <div className="flex items-center justify-center py-4">
-            <span className="text-center text-[10px] leading-relaxed text-[var(--sea-ink-soft)]">
+            <span className="text-center text-sm leading-relaxed text-[var(--ink-soft)]">
               No chains
             </span>
           </div>
@@ -95,24 +79,37 @@ export function DayColumn({ date, chains, onUpdate }: DayColumnProps) {
         )}
       </div>
 
-      {/* Add chain button */}
-      <div className="border-t border-[var(--line)] p-1.5">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-7 w-full justify-center gap-1 text-[10px] text-[var(--lagoon-deep)] hover:bg-[rgba(79,184,178,0.1)]"
+      {/* Action buttons */}
+      <div className="flex border-t border-[var(--rule-light)] p-1.5">
+        <button
+          className="flex h-7 flex-1 cursor-pointer items-center justify-center gap-1 bg-transparent text-sm font-medium text-[var(--terracotta)] hover:underline"
           onClick={() => setAddChainOpen(true)}
           aria-label={`Add chain for ${date}`}
         >
           <Plus className="size-3" />
           Add
-        </Button>
+        </button>
+        <button
+          className="flex h-7 flex-1 cursor-pointer items-center justify-center gap-1 bg-transparent text-sm font-medium text-[var(--ink-soft)] hover:text-[var(--terracotta)] hover:underline"
+          onClick={() => setCopyDayOpen(true)}
+          aria-label={`Copy chains to ${date}`}
+        >
+          <Copy className="size-3" />
+          Copy
+        </button>
       </div>
 
       <AddChainDialog
         open={addChainOpen}
         onOpenChange={setAddChainOpen}
         date={date}
+        onSuccess={onUpdate}
+      />
+
+      <CopyDayDialog
+        open={copyDayOpen}
+        onOpenChange={setCopyDayOpen}
+        targetDay={date}
         onSuccess={onUpdate}
       />
     </div>

@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { getLocalDb } from "@/db/local";
@@ -77,6 +78,7 @@ export async function copyWeek(
           chainId: newChainId,
           name: event.name,
           durationMinutes: event.durationMinutes,
+          timezone: event.timezone,
           sortOrder: event.sortOrder,
           gcalEventId: null,
           createdAt: now,
@@ -87,6 +89,7 @@ export async function copyWeek(
           chainId: newChainId,
           name: event.name,
           durationMinutes: event.durationMinutes,
+          timezone: event.timezone,
           sortOrder: event.sortOrder,
           gcalEventId: null,
           createdAt: now,
@@ -121,10 +124,24 @@ export const $copyWeek = createServerFn({ method: "POST" })
       sourceWeekStart: isoDate,
       targetWeekStart: isoDate,
       offsetMinutes: z.number().int().min(-720).max(720).optional(),
+      clearExisting: z.boolean().optional(),
     }),
   )
   .handler(async ({ data }) => {
     const user = await requireAuth();
+
+    if (data.clearExisting) {
+      const db = await getLocalDb();
+      const existing = await getChainsByWeek(user.id, data.targetWeekStart);
+      for (const dayChains of Object.values(existing)) {
+        for (const chain of dayChains) {
+          await db
+            .delete(chains)
+            .where(and(eq(chains.id, chain.id), eq(chains.userId, user.id)));
+        }
+      }
+    }
+
     return copyWeek(
       user.id,
       data.sourceWeekStart,

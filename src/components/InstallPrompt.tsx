@@ -25,9 +25,9 @@ export function InstallPrompt() {
   if (!prompt || dismissed) return null;
 
   return (
-    <div className="fixed right-4 bottom-4 left-4 z-50 flex items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)] px-4 py-3 shadow-lg md:right-4 md:left-auto md:max-w-sm">
-      <Download className="size-5 shrink-0 text-[var(--lagoon-deep)]" />
-      <p className="flex-1 text-sm text-[var(--sea-ink)]">
+    <div className="fixed right-4 bottom-4 left-4 z-50 flex items-center gap-3 rounded-lg border border-[var(--rule)] bg-[var(--paper)] px-4 py-3 shadow-md md:right-4 md:left-auto md:max-w-sm">
+      <Download className="size-5 shrink-0 text-[var(--terracotta)]" />
+      <p className="flex-1 text-sm text-[var(--ink)]">
         Install Preplan for quick access
       </p>
       <Button
@@ -43,9 +43,9 @@ export function InstallPrompt() {
       </Button>
       <button
         onClick={() => setDismissed(true)}
-        className="text-xs text-[var(--sea-ink-soft)] hover:text-[var(--sea-ink)]"
+        className="text-xs text-[var(--ink-soft)] hover:text-[var(--ink)]"
       >
-        ✕
+        {"\u2715"}
       </button>
     </div>
   );

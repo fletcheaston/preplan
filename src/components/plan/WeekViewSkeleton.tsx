@@ -1,7 +1,7 @@
 function SkeletonLine({ className }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded bg-[var(--surface-strong)] ${className}`}
+      className={`animate-pulse rounded bg-[var(--rule-light)] ${className}`}
     />
   );
 }
@@ -15,11 +15,11 @@ function DayColumnSkeleton() {
       {[0, 1].map((i) => (
         <div
           key={i}
-          className="space-y-2 rounded-2xl border border-[var(--line)] p-3"
+          className="space-y-2 rounded-lg border border-[var(--rule)] p-3"
         >
           <div className="flex items-center gap-2">
             <SkeletonLine className="h-4 flex-1" />
-            <SkeletonLine className="h-4 w-14 rounded-full" />
+            <SkeletonLine className="h-4 w-14" />
           </div>
           {[0, 1].map((j) => (
             <div key={j} className="flex items-center gap-2">

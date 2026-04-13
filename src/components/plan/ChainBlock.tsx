@@ -49,23 +49,25 @@ export function ChainBlock({ chain, events, date, onUpdate }: ChainBlockProps) {
     }
   }
 
-  const directionLabel =
-    chain.direction === "backward"
-      ? `← ${formatDisplayTime(chain.anchorTime)}`
-      : `→ ${formatDisplayTime(chain.anchorTime)}`;
+  const isBackward = chain.direction === "backward";
+  const directionChar = isBackward ? "\u2190" : "\u2192";
+  const stripeColor = isBackward ? "var(--terracotta)" : "var(--sage)";
 
   return (
     <>
-      <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[linear-gradient(165deg,var(--surface-strong),var(--surface))] shadow-[0_1px_0_var(--inset-glint)_inset,0_4px_16px_rgba(23,58,64,0.07)]">
+      <div
+        className="overflow-hidden rounded-lg border border-[var(--rule)] bg-[var(--paper)]"
+        style={{ borderLeft: `3px solid ${stripeColor}` }}
+      >
         {/* Header */}
-        <div className="flex items-center gap-2 border-b border-[var(--line)] px-4 py-3">
-          <span className="flex-1 truncate text-sm font-bold text-[var(--sea-ink)]">
+        <div className="flex items-center gap-2 border-b border-[var(--rule-light)] px-4 py-3">
+          <span className="flex-1 truncate text-base font-semibold text-[var(--ink)]">
             {chain.name}
           </span>
 
-          {/* Anchor time badge */}
-          <span className="shrink-0 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-2.5 py-0.5 text-xs font-semibold text-[var(--lagoon-deep)]">
-            {directionLabel}
+          {/* Anchor time in mono */}
+          <span className="shrink-0 font-mono text-sm text-[var(--ink-soft)]">
+            {directionChar} {formatDisplayTime(chain.anchorTime)}
           </span>
 
           {/* Sync chain to Google Calendar */}
@@ -105,7 +107,7 @@ export function ChainBlock({ chain, events, date, onUpdate }: ChainBlockProps) {
         {/* Events list */}
         <div className="px-2 py-1">
           {sortedEvents.length === 0 ? (
-            <p className="px-2 py-3 text-sm text-[var(--sea-ink-soft)]">
+            <p className="px-2 py-3 text-base text-[var(--ink-soft)]">
               No events yet. Add one below.
             </p>
           ) : (
@@ -119,17 +121,15 @@ export function ChainBlock({ chain, events, date, onUpdate }: ChainBlockProps) {
           )}
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-[var(--line)] px-4 py-2.5">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-center gap-1.5 text-xs text-[var(--lagoon-deep)] hover:bg-[rgba(79,184,178,0.1)]"
+        {/* Footer - plain text add link */}
+        <div className="border-t border-[var(--rule-light)] px-4 py-2.5">
+          <button
+            className="flex w-full cursor-pointer items-center justify-center gap-1.5 bg-transparent text-xs font-medium text-[var(--terracotta)] hover:underline"
             onClick={() => setAddEventOpen(true)}
           >
-            <Plus className="size-3.5" />
+            <Plus className="size-4" />
             Add event
-          </Button>
+          </button>
         </div>
       </div>
 

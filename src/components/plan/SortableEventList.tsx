@@ -118,16 +118,16 @@ function DragOverlayItem({
   chainDate: string;
 }) {
   return (
-    <div className="flex min-h-[44px] items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-2 py-2 shadow-lg">
-      <div className="flex shrink-0 cursor-grabbing items-center text-[var(--sea-ink-soft)] opacity-70">
+    <div className="flex min-h-[44px] items-center gap-2 rounded-lg border border-[var(--rule)] bg-[var(--paper)] px-2 py-2 shadow-md">
+      <div className="flex shrink-0 cursor-grabbing items-center text-[var(--ink-soft)] opacity-60">
         <GripVertical className="size-4" />
       </div>
       <div className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-medium text-[var(--sea-ink)]">
+        <span className="block truncate text-sm font-medium text-[var(--ink)]">
           {event.name}
         </span>
         <div className="mt-0.5 flex items-center gap-2">
-          <span className="inline-flex items-center rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-2 py-0.5 text-xs font-medium text-[var(--sea-ink-soft)]">
+          <span className="font-mono text-xs text-[var(--ink-soft)]">
             {formatDuration(event.durationMinutes)}
           </span>
         </div>

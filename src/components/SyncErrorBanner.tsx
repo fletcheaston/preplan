@@ -7,9 +7,9 @@ export function SyncErrorBanner() {
   if (dismissed) return null;
 
   return (
-    <div className="flex items-center gap-3 border-b border-[var(--line)] bg-amber-50 px-4 py-2.5 dark:bg-amber-950/30">
-      <AlertCircle className="size-4 shrink-0 text-amber-600" />
-      <p className="flex-1 text-sm text-amber-800 dark:text-amber-200">
+    <div className="flex items-center gap-3 border-b border-[var(--rule)] bg-[var(--paper)] px-4 py-2.5">
+      <AlertCircle className="size-4 shrink-0 text-[var(--terracotta)]" />
+      <p className="flex-1 text-sm text-[var(--ink)]">
         Google Calendar sync needs attention.{" "}
         <a href="/auth/google" className="font-semibold underline">
           Reconnect Google
@@ -18,7 +18,7 @@ export function SyncErrorBanner() {
       </p>
       <button
         onClick={() => setDismissed(true)}
-        className="text-amber-600 hover:text-amber-800"
+        className="text-[var(--ink-soft)] hover:text-[var(--ink)]"
       >
         <X className="size-4" />
       </button>

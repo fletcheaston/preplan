@@ -42,6 +42,7 @@ function makeEvent(
     name,
     durationMinutes,
     sortOrder,
+    timezone: "America/Los_Angeles",
     gcalEventId: null,
     createdAt: new Date(),
     updatedAt: new Date(),

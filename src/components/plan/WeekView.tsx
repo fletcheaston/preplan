@@ -35,7 +35,7 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
       {/* Desktop: 7-column grid */}
       <main className="flex-1 overflow-x-auto">
         {/* Desktop layout */}
-        <div className="hidden items-start gap-2 p-3 md:grid md:grid-cols-7">
+        <div className="hidden items-start md:grid md:grid-cols-7 md:divide-x md:divide-[var(--rule)]">
           {weekDates.map((date) => (
             <DayColumn
               key={date}
@@ -48,7 +48,7 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
 
         {/* Mobile layout */}
         <div className="px-4 py-6 md:hidden">
-          <p className="mb-4 text-center text-sm font-medium text-[var(--sea-ink-soft)]">
+          <p className="mb-4 text-center text-sm font-medium text-[var(--ink-soft)]">
             Switch to desktop for week view. Tap a day below:
           </p>
           <div className="flex flex-col gap-2">
@@ -72,28 +72,26 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
                     navigate({ to: "/plan/$date", params: { date } })
                   }
                   className={[
-                    "flex cursor-pointer items-center justify-between rounded-xl border px-4 py-3 text-left transition-all",
+                    "flex cursor-pointer items-center justify-between rounded-lg border px-4 py-3 text-left transition-all",
                     isToday
-                      ? "border-[var(--lagoon)] bg-[rgba(79,184,178,0.08)] font-semibold"
-                      : "border-[var(--line)] bg-[rgba(255,255,255,0.3)] hover:border-[var(--lagoon)]",
+                      ? "border-[var(--terracotta)] bg-[var(--paper)] font-semibold"
+                      : "border-[var(--rule)] bg-[var(--white)] hover:border-[var(--terracotta)]",
                   ].join(" ")}
                 >
                   <span
                     className={
-                      isToday
-                        ? "text-[var(--lagoon-deep)]"
-                        : "text-[var(--sea-ink)]"
+                      isToday ? "text-[var(--terracotta)]" : "text-[var(--ink)]"
                     }
                   >
                     {label}
                     {isToday && (
-                      <span className="ml-1.5 text-xs font-normal text-[var(--lagoon-deep)]">
+                      <span className="ml-1.5 text-xs font-normal text-[var(--terracotta)]">
                         Today
                       </span>
                     )}
                   </span>
                   {chainCount > 0 && (
-                    <span className="text-xs text-[var(--sea-ink-soft)]">
+                    <span className="text-xs text-[var(--ink-soft)]">
                       {chainCount} {chainCount === 1 ? "chain" : "chains"}
                     </span>
                   )}

@@ -15,7 +15,7 @@ import { syncChainToCalendar } from "@/lib/sync";
 export async function createEvent(
   chainId: string,
   userId: string,
-  data: { name: string; durationMinutes: number },
+  data: { name: string; durationMinutes: number; timezone: string },
 ): Promise<Event> {
   if (data.durationMinutes % 15 !== 0) {
     throw new Error("durationMinutes must be a multiple of 15");
@@ -51,6 +51,7 @@ export async function createEvent(
     chainId,
     name: data.name,
     durationMinutes: data.durationMinutes,
+    timezone: data.timezone,
     sortOrder: nextSortOrder,
     gcalEventId: null,
     createdAt: now,
@@ -184,6 +185,7 @@ export const $createEvent = createServerFn({ method: "POST" })
       chainId: z.string().uuid(),
       name: z.string().min(1).max(100),
       durationMinutes: durationMinutesSchema,
+      timezone: z.string().min(1),
     }),
   )
   .handler(async ({ data }) => {
@@ -192,6 +194,7 @@ export const $createEvent = createServerFn({ method: "POST" })
     const created = await createEvent(data.chainId, user.id, {
       name: data.name,
       durationMinutes: data.durationMinutes,
+      timezone: data.timezone,
     });
     try {
       await syncChainToCalendar(db, user.id, data.chainId);

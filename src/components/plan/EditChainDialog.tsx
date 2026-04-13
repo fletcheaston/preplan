@@ -64,19 +64,19 @@ export function EditChainDialog({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" />
-        <DialogPrimitive.Content className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)] p-6 shadow-xl">
-          <DialogPrimitive.Title className="mb-1 text-base font-semibold text-[var(--sea-ink)]">
+        <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/40" />
+        <DialogPrimitive.Content className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[var(--rule)] bg-[var(--white)] p-6 shadow-lg">
+          <DialogPrimitive.Title className="mb-1 text-base font-semibold text-[var(--ink)]">
             Edit Chain
           </DialogPrimitive.Title>
-          <DialogPrimitive.Description className="mb-4 text-sm text-[var(--sea-ink-soft)]">
+          <DialogPrimitive.Description className="mb-4 text-sm text-[var(--ink-soft)]">
             Update this chain's name, anchor time, or direction.
           </DialogPrimitive.Description>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label
-                className="text-sm font-medium text-[var(--sea-ink)]"
+                className="text-sm font-medium text-[var(--ink)]"
                 htmlFor="edit-chain-name"
               >
                 Name
@@ -92,7 +92,7 @@ export function EditChainDialog({
 
             <div className="flex flex-col gap-1.5">
               <label
-                className="text-sm font-medium text-[var(--sea-ink)]"
+                className="text-sm font-medium text-[var(--ink)]"
                 htmlFor="edit-chain-anchor-time"
               >
                 Anchor time
@@ -103,12 +103,12 @@ export function EditChainDialog({
                 value={anchorTime}
                 onChange={(e) => setAnchorTime(e.target.value)}
                 required
-                className="h-9 w-full rounded-md border border-[var(--border)] bg-transparent px-3 py-1 text-sm text-[var(--sea-ink)] shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-[var(--ring)] focus-visible:ring-[3px] focus-visible:ring-[var(--ring)]/50"
+                className="h-9 w-full rounded border border-[var(--rule)] bg-[var(--white)] px-3 py-1 font-mono text-sm text-[var(--ink)] transition-[color,box-shadow] outline-none focus-visible:border-[var(--terracotta)] focus-visible:ring-[2px] focus-visible:ring-[var(--selection)]"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-[var(--sea-ink)]">
+              <label className="text-sm font-medium text-[var(--ink)]">
                 Direction
               </label>
               <Select
@@ -125,7 +125,9 @@ export function EditChainDialog({
               </Select>
             </div>
 
-            {error && <p className="text-destructive text-sm">{error}</p>}
+            {error && (
+              <p className="text-sm text-[var(--terracotta)]">{error}</p>
+            )}
 
             <div className="flex justify-end gap-2 pt-1">
               <Button
@@ -140,7 +142,7 @@ export function EditChainDialog({
                 type="submit"
                 disabled={loading || !name.trim() || !anchorTime}
               >
-                {loading ? "Saving…" : "Save"}
+                {loading ? "Saving\u2026" : "Save"}
               </Button>
             </div>
           </form>

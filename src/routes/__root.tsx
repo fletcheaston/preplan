@@ -22,7 +22,7 @@ export const Route = createRootRoute({
       },
       {
         name: "theme-color",
-        content: "#173a40",
+        content: "#2C2C2C",
       },
       {
         name: "apple-mobile-web-app-capable",
@@ -61,7 +61,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="font-sans [overflow-wrap:anywhere] antialiased selection:bg-[rgba(79,184,178,0.24)]">
+      <body className="font-sans [overflow-wrap:anywhere] antialiased selection:bg-[var(--selection)]">
         <Header />
         {false && <SyncErrorBanner />}
         {children}

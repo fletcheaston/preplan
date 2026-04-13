@@ -1,14 +1,5 @@
 const GCAL_BASE = "https://www.googleapis.com/calendar/v3";
 
-/** Convert "YYYY-MM-DD" + "HH:MM" to ISO 8601 datetime with timezone offset. */
-function toISODateTime(
-  date: string,
-  time: string,
-  tzOffset = "-05:00",
-): string {
-  return `${date}T${time}:00${tzOffset}`;
-}
-
 /**
  * Ensure the "Preplan" calendar exists in the user's Google Calendar account.
  * Returns the calendarId string.
@@ -73,8 +64,11 @@ export async function upsertCalendarEvent(
   event: {
     gcalEventId: string | null;
     summary: string;
-    startDateTime: string; // ISO 8601 with timezone e.g. "2024-01-10T09:00:00-05:00"
-    endDateTime: string;
+    startDate: string; // "YYYY-MM-DD"
+    startTime: string; // "HH:MM"
+    endDate: string;
+    endTime: string;
+    timeZone: string; // IANA timezone e.g. "America/Los_Angeles"
   },
 ): Promise<string> {
   const headers = {
@@ -84,8 +78,14 @@ export async function upsertCalendarEvent(
 
   const body = JSON.stringify({
     summary: event.summary,
-    start: { dateTime: event.startDateTime, timeZone: "America/New_York" },
-    end: { dateTime: event.endDateTime, timeZone: "America/New_York" },
+    start: {
+      dateTime: `${event.startDate}T${event.startTime}:00`,
+      timeZone: event.timeZone,
+    },
+    end: {
+      dateTime: `${event.endDate}T${event.endTime}:00`,
+      timeZone: event.timeZone,
+    },
   });
 
   let res: Response;
@@ -139,18 +139,4 @@ export async function deleteCalendarEvent(
       `Failed to delete calendar event: ${res.status} ${await res.text()}`,
     );
   }
-}
-
-/** Build start/end ISO datetimes from DerivedEvent fields. */
-export function buildEventDateTimes(
-  startDay: string,
-  startTime: string,
-  endDay: string,
-  endTime: string,
-  tzOffset = "-05:00",
-): { startDateTime: string; endDateTime: string } {
-  return {
-    startDateTime: toISODateTime(startDay, startTime, tzOffset),
-    endDateTime: toISODateTime(endDay, endTime, tzOffset),
-  };
 }

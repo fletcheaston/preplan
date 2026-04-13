@@ -1,11 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 
 import type { ChainWithEvents } from "@/lib/server/chains";
-import {
-  deriveEventTimes,
-  formatDisplayTime,
-  formatDuration,
-} from "@/lib/time";
+import { deriveEventTimes, formatDisplayTime } from "@/lib/time";
 
 type DayColumnChainCardProps = {
   chain: ChainWithEvents;
@@ -20,15 +16,8 @@ export function DayColumnChainCard({ chain, date }: DayColumnChainCardProps) {
   );
   const derivedEvents = deriveEventTimes(chain, sortedEvents);
 
-  const totalDuration = chain.events.reduce(
-    (sum, e) => sum + e.durationMinutes,
-    0,
-  );
-
-  const directionLabel =
-    chain.direction === "backward"
-      ? `← ${formatDisplayTime(chain.anchorTime)}`
-      : `→ ${formatDisplayTime(chain.anchorTime)}`;
+  const isBackward = chain.direction === "backward";
+  const directionChar = isBackward ? "\u2190" : "\u2192";
 
   const eventCount = chain.events.length;
 
@@ -36,39 +25,43 @@ export function DayColumnChainCard({ chain, date }: DayColumnChainCardProps) {
     navigate({ to: "/plan/$date", params: { date } });
   }
 
-  // Use derivedEvents to suppress unused warning — we expose first/last times if useful
+  // Use derivedEvents to suppress unused warning
   void derivedEvents;
 
   return (
     <button
       type="button"
       onClick={handleClick}
-      className="w-full cursor-pointer overflow-hidden rounded-xl border border-[var(--line)] bg-[linear-gradient(165deg,var(--surface-strong),var(--surface))] px-3 py-2 text-left shadow-[0_1px_0_var(--inset-glint)_inset,0_2px_8px_rgba(23,58,64,0.06)] transition-all hover:border-[var(--lagoon)] hover:shadow-[0_2px_12px_rgba(79,184,178,0.18)] active:scale-[0.98]"
+      className="w-full cursor-pointer border-b border-[var(--rule-light)] px-2 py-1.5 text-left transition-colors last:border-b-0 hover:bg-[var(--paper)]"
     >
-      {/* Chain name */}
-      <div className="truncate text-xs leading-tight font-bold text-[var(--sea-ink)]">
-        {chain.name}
+      {/* Chain name with left dot marker */}
+      <div className="flex items-start gap-1.5">
+        <span
+          className="mt-1.5 inline-block size-1.5 shrink-0 rounded-full"
+          style={{
+            backgroundColor: isBackward ? "var(--terracotta)" : "var(--sage)",
+          }}
+        />
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-base leading-tight font-semibold text-[var(--ink)]">
+            {chain.name}
+          </div>
+          {/* Anchor time in mono */}
+          <div className="font-mono text-sm text-[var(--ink-soft)]">
+            {directionChar} {formatDisplayTime(chain.anchorTime)}
+          </div>
+        </div>
       </div>
 
-      {/* Anchor time */}
-      <div className="mt-0.5 text-[10px] font-semibold text-[var(--lagoon-deep)]">
-        {directionLabel}
-      </div>
-
-      {/* Event count + duration */}
-      <div className="mt-1 flex items-center justify-between gap-1">
-        <span className="text-[10px] text-[var(--sea-ink-soft)]">
+      {/* Event count */}
+      <div className="mt-0.5 pl-3">
+        <span className="text-sm text-[var(--ink-soft)]">
           {eventCount === 0
             ? "No events"
             : eventCount === 1
               ? "1 event"
               : `${eventCount} events`}
         </span>
-        {totalDuration > 0 && (
-          <span className="text-[10px] text-[var(--sea-ink-soft)]">
-            {formatDuration(totalDuration)}
-          </span>
-        )}
       </div>
     </button>
   );

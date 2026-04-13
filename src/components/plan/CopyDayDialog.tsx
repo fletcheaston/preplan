@@ -4,24 +4,16 @@ import { Dialog as DialogPrimitive } from "radix-ui";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { $copyWeek } from "@/lib/server/weeks";
+import { $copyDay } from "@/lib/server/chains";
 
-type CopyWeekDialogProps = {
+type CopyDayDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  targetWeekStart: string; // the current week (destination)
+  targetDay: string;
   onSuccess: () => void;
 };
 
-function getMondayOf(date: string): string {
-  const d = new Date(`${date}T12:00:00Z`);
-  const day = d.getUTCDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  d.setUTCDate(d.getUTCDate() + diff);
-  return d.toISOString().split("T")[0];
-}
-
-function addWeeksDays(isoDate: string, days: number): string {
+function addDaysUTC(isoDate: string, days: number): string {
   const d = new Date(`${isoDate}T12:00:00Z`);
   d.setUTCDate(d.getUTCDate() + days);
   const yyyy = d.getUTCFullYear();
@@ -30,44 +22,32 @@ function addWeeksDays(isoDate: string, days: number): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function formatWeekRange(monday: string): string {
-  const start = new Date(`${monday}T12:00:00Z`);
-  const end = new Date(`${monday}T12:00:00Z`);
-  end.setUTCDate(end.getUTCDate() + 6);
-
-  const startStr = start.toLocaleDateString("en-US", {
+function formatDayLabel(isoDate: string): string {
+  const d = new Date(`${isoDate}T12:00:00Z`);
+  return d.toLocaleDateString("en-US", {
+    weekday: "long",
     month: "short",
     day: "numeric",
     timeZone: "UTC",
   });
-  const endStr = end.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-  return `${startStr} \u2013 ${endStr}`;
 }
 
-function getPast8Weeks(targetWeekStart: string): string[] {
-  // Start from the Monday BEFORE targetWeekStart and go back 8 weeks
-  const weeks: string[] = [];
-  let current = getMondayOf(addWeeksDays(targetWeekStart, -1));
-  for (let i = 0; i < 8; i++) {
-    weeks.push(current);
-    current = addWeeksDays(current, -7);
+function getPast14Days(targetDay: string): string[] {
+  const days: string[] = [];
+  for (let i = 1; i <= 14; i++) {
+    days.push(addDaysUTC(targetDay, -i));
   }
-  return weeks;
+  return days;
 }
 
-export function CopyWeekDialog({
+export function CopyDayDialog({
   open,
   onOpenChange,
-  targetWeekStart,
+  targetDay,
   onSuccess,
-}: CopyWeekDialogProps) {
-  const pastWeeks = getPast8Weeks(targetWeekStart);
-  const [selectedWeek, setSelectedWeek] = useState<string>(pastWeeks[0]);
+}: CopyDayDialogProps) {
+  const pastDays = getPast14Days(targetDay);
+  const [selectedDay, setSelectedDay] = useState<string>(pastDays[0]);
   const [offsetMinutes, setOffsetMinutes] = useState<number>(0);
   const [clearExisting, setClearExisting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -77,10 +57,10 @@ export function CopyWeekDialog({
     setLoading(true);
     setError(null);
     try {
-      await $copyWeek({
+      await $copyDay({
         data: {
-          sourceWeekStart: selectedWeek,
-          targetWeekStart,
+          sourceDay: selectedDay,
+          targetDay,
           offsetMinutes: offsetMinutes || undefined,
           clearExisting: clearExisting || undefined,
         },
@@ -88,7 +68,7 @@ export function CopyWeekDialog({
       onOpenChange(false);
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to copy week");
+      setError(err instanceof Error ? err.message : "Failed to copy day");
     } finally {
       setLoading(false);
     }
@@ -100,21 +80,22 @@ export function CopyWeekDialog({
         <DialogPrimitive.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/40" />
         <DialogPrimitive.Content className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border border-[var(--rule)] bg-[var(--white)] p-6 shadow-lg">
           <DialogPrimitive.Title className="mb-1 text-base font-semibold text-[var(--ink)]">
-            Copy a past week
+            Copy from a past day
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="mb-4 text-sm text-[var(--ink-soft)]">
-            Choose a past week to copy all its chains into the current week.
+            Choose a day to copy all its chains into {formatDayLabel(targetDay)}
+            .
           </DialogPrimitive.Description>
 
-          {/* Week list */}
+          {/* Day list */}
           <div className="mb-4 flex max-h-60 flex-col gap-1.5 overflow-y-auto pr-0.5">
-            {pastWeeks.map((monday) => {
-              const isSelected = monday === selectedWeek;
+            {pastDays.map((day) => {
+              const isSelected = day === selectedDay;
               return (
                 <button
-                  key={monday}
+                  key={day}
                   type="button"
-                  onClick={() => setSelectedWeek(monday)}
+                  onClick={() => setSelectedDay(day)}
                   className={[
                     "flex cursor-pointer items-center justify-between rounded-lg border px-4 py-2.5 text-left text-sm transition-all",
                     isSelected
@@ -122,7 +103,7 @@ export function CopyWeekDialog({
                       : "border-[var(--rule)] bg-[var(--white)] text-[var(--ink)] hover:border-[var(--terracotta)] hover:bg-[var(--paper)]",
                   ].join(" ")}
                 >
-                  <span>{formatWeekRange(monday)}</span>
+                  <span>{formatDayLabel(day)}</span>
                   {isSelected && (
                     <span className="ml-2 h-1.5 w-1.5 rounded-full bg-[var(--terracotta)]" />
                   )}
@@ -135,12 +116,12 @@ export function CopyWeekDialog({
           <div className="mb-5 flex flex-col gap-1.5">
             <label
               className="text-sm font-medium text-[var(--ink)]"
-              htmlFor="copy-week-offset"
+              htmlFor="copy-day-offset"
             >
               Shift all anchor times by
             </label>
             <Input
-              id="copy-week-offset"
+              id="copy-day-offset"
               type="number"
               value={offsetMinutes}
               onChange={(e) => setOffsetMinutes(Number(e.target.value))}
@@ -161,7 +142,7 @@ export function CopyWeekDialog({
               className="size-4 accent-[var(--terracotta)]"
             />
             <span className="text-sm text-[var(--ink)]">
-              Remove existing chains from this week first
+              Remove existing chains from this day first
             </span>
           </label>
 
@@ -178,8 +159,8 @@ export function CopyWeekDialog({
             >
               Cancel
             </Button>
-            <Button onClick={handleCopy} disabled={loading || !selectedWeek}>
-              {loading ? "Copying\u2026" : "Copy"}
+            <Button onClick={handleCopy} disabled={loading || !selectedDay}>
+              {loading ? "Copying..." : "Copy"}
             </Button>
           </div>
         </DialogPrimitive.Content>

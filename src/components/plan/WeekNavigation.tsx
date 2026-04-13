@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { ChevronLeft, ChevronRight, Copy } from "lucide-react";
+import { Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -27,9 +27,9 @@ function formatWeekRange(weekStart: string): string {
   const year = end.getUTCFullYear();
 
   if (startMonth === endMonth) {
-    return `${startMonth} ${startDay} – ${endDay}, ${year}`;
+    return `${startMonth} ${startDay} \u2013 ${endDay}, ${year}`;
   }
-  return `${startMonth} ${startDay} – ${endMonth} ${endDay}, ${year}`;
+  return `${startMonth} ${startDay} \u2013 ${endMonth} ${endDay}, ${year}`;
 }
 
 function addWeeks(isoDate: string, weeks: number): string {
@@ -63,47 +63,43 @@ export function WeekNavigation({ weekStart, onCopyWeek }: WeekNavigationProps) {
   }
 
   return (
-    <div className="flex items-center gap-2 border-b border-[var(--line)] bg-[var(--header-bg)] px-4 py-3 backdrop-blur-md">
-      <Button
-        variant="ghost"
-        size="icon-sm"
+    <div className="flex items-center gap-3 border-b border-[var(--rule)] bg-[var(--header-bg)] px-4 py-3 backdrop-blur-sm">
+      <button
+        className="cursor-pointer bg-transparent font-mono text-lg text-[var(--ink-soft)] hover:text-[var(--ink)]"
         onClick={() => goToWeek(addWeeks(weekStart, -1))}
         aria-label="Previous week"
       >
-        <ChevronLeft className="size-4" />
-      </Button>
+        {"\u2190"}
+      </button>
 
       <div className="flex-1 text-center">
-        <span className="text-sm font-semibold text-[var(--sea-ink)]">
+        <span className="text-base font-semibold text-[var(--ink)]">
           {formatWeekRange(weekStart)}
         </span>
       </div>
 
-      <Button
-        variant="ghost"
-        size="icon-sm"
+      <button
+        className="cursor-pointer bg-transparent font-mono text-lg text-[var(--ink-soft)] hover:text-[var(--ink)]"
         onClick={() => goToWeek(addWeeks(weekStart, 1))}
         aria-label="Next week"
       >
-        <ChevronRight className="size-4" />
-      </Button>
+        {"\u2192"}
+      </button>
 
       {!isCurrentWeek && (
-        <Button
-          variant="outline"
-          size="sm"
+        <button
+          className="cursor-pointer rounded-lg border border-[var(--rule)] bg-[var(--white)] px-3 py-1.5 text-sm font-medium text-[var(--ink)] hover:border-[var(--terracotta)] hover:text-[var(--terracotta)]"
           onClick={() => goToWeek(thisMonday)}
-          className="ml-1 text-xs"
         >
           This week
-        </Button>
+        </button>
       )}
 
       <Button
         variant="outline"
         size="sm"
         onClick={onCopyWeek}
-        className="ml-1 gap-1.5 text-xs"
+        className="ml-1 gap-1.5 text-sm"
       >
         <Copy className="size-3" />
         Copy week

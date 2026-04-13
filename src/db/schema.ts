@@ -53,6 +53,7 @@ export const events = sqliteTable("events", {
     .references(() => chains.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   durationMinutes: integer("duration_minutes").notNull(), // multiples of 15, max 720
+  timezone: text("timezone").notNull().default("America/Los_Angeles"), // IANA timezone from browser
   sortOrder: integer("sort_order").notNull().default(1000),
   gcalEventId: text("gcal_event_id"),
   createdAt: integer("created_at", { mode: "timestamp" })
