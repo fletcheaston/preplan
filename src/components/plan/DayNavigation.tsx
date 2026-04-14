@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useNavigate } from "@tanstack/react-router";
 
-import { addDays } from "@/lib/time";
+import { addDays, getLocalToday } from "@/lib/time";
 
 type DayNavigationProps = {
   date: string; // ISO date YYYY-MM-DD
@@ -32,7 +32,7 @@ export function DayNavigation({ date }: DayNavigationProps) {
   const navigate = useNavigate();
   const [showPicker, setShowPicker] = useState(false);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalToday();
   const prevDay = addDays(date, -1);
   const nextDay = addDays(date, 1);
 

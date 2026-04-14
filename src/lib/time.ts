@@ -33,6 +33,28 @@ export function formatTime(totalMinutes: number): string {
   return `${hh}:${mm}`;
 }
 
+/** Today's date in the user's local timezone as "YYYY-MM-DD". */
+export function getLocalToday(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+/** This week's Monday (in the user's local timezone) as "YYYY-MM-DD". */
+export function getLocalThisMonday(): string {
+  const today = getLocalToday();
+  const d = new Date(`${today}T12:00:00Z`);
+  const dow = d.getUTCDay();
+  const diff = dow === 0 ? -6 : 1 - dow;
+  d.setUTCDate(d.getUTCDate() + diff);
+  const yyyy = d.getUTCFullYear();
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 /** Add `days` (can be negative) to an ISO date string "YYYY-MM-DD", return new ISO date string. */
 export function addDays(isoDate: string, days: number): string {
   // Use T12:00:00Z to avoid DST issues

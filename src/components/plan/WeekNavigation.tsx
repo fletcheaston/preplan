@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { getLocalThisMonday } from "@/lib/time";
 
 type WeekNavigationProps = {
   weekStart: string; // Monday ISO date
@@ -41,21 +42,10 @@ function addWeeks(isoDate: string, weeks: number): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function getThisMonday(): string {
-  const today = new Date().toISOString().split("T")[0];
-  const d = new Date(`${today}T12:00:00Z`);
-  const day = d.getUTCDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  d.setUTCDate(d.getUTCDate() + diff);
-  const yyyy = d.getUTCFullYear();
-  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(d.getUTCDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-}
 
 export function WeekNavigation({ weekStart, onCopyWeek }: WeekNavigationProps) {
   const navigate = useNavigate();
-  const thisMonday = getThisMonday();
+  const thisMonday = getLocalThisMonday();
   const isCurrentWeek = weekStart === thisMonday;
 
   function goToWeek(monday: string) {

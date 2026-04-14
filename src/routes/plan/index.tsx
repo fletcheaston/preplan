@@ -2,26 +2,17 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
 
+import { getLocalThisMonday, getLocalToday } from "@/lib/time";
+
 const detectMobile = createServerFn({ method: "GET" }).handler(() => {
   const ua = getRequestHeader("user-agent") ?? "";
   return /Mobile|Android|iPhone|iPad|iPod/i.test(ua);
 });
 
-function getThisMonday(today: string): string {
-  const d = new Date(`${today}T12:00:00Z`);
-  const day = d.getUTCDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  d.setUTCDate(d.getUTCDate() + diff);
-  const yyyy = d.getUTCFullYear();
-  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(d.getUTCDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-}
-
 export const Route = createFileRoute("/plan/")({
   loader: async () => {
-    const today = new Date().toISOString().split("T")[0];
-    const thisMonday = getThisMonday(today);
+    const today = getLocalToday();
+    const thisMonday = getLocalThisMonday();
 
     // Detect mobile: matchMedia on client, User-Agent on server
     let isMobile: boolean;

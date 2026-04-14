@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 
 import type { ChainWithEvents } from "@/lib/server/chains";
-import { getWeekDates } from "@/lib/time";
+import { getLocalToday, getWeekDates } from "@/lib/time";
 
 import { CopyWeekDialog } from "./CopyWeekDialog";
 import { DayColumn } from "./DayColumn";
@@ -54,7 +54,7 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
           <div className="flex flex-col gap-2">
             {weekDates.map((date) => {
               const d = new Date(`${date}T12:00:00Z`);
-              const today = new Date().toISOString().split("T")[0];
+              const today = getLocalToday();
               const isToday = date === today;
               const label = d.toLocaleDateString("en-US", {
                 weekday: "long",

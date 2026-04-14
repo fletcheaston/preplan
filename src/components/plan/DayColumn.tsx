@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Copy, Plus } from "lucide-react";
 
 import type { ChainWithEvents } from "@/lib/server/chains";
+import { getLocalToday } from "@/lib/time";
 
 import { AddChainDialog } from "./AddChainDialog";
 import { CopyDayDialog } from "./CopyDayDialog";
@@ -31,7 +32,7 @@ export function DayColumn({ date, chains, onUpdate }: DayColumnProps) {
   const [addChainOpen, setAddChainOpen] = useState(false);
   const [copyDayOpen, setCopyDayOpen] = useState(false);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalToday();
   const isToday = date === today;
 
   const { abbrev, day } = formatDayHeader(date);
