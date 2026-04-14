@@ -4,7 +4,7 @@
   "description": "Day-by-day planning with time-anchored chains",
   "start_url": "/plan",
   "display": "standalone",
-  "background_color": "#2C2C2C",
+  "background_color": "#F5F0E8",
   "theme_color": "#2C2C2C",
   "orientation": "portrait-primary",
   "icons": [

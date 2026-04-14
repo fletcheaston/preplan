@@ -47,6 +47,11 @@ export const Route = createRootRoute({
         href: "/manifest.json",
       },
       {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "/favicon.svg",
+      },
+      {
         rel: "apple-touch-icon",
         href: "/icons/icon-192.svg",
       },
