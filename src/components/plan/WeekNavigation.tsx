@@ -1,9 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { Copy } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { getLocalThisMonday } from "@/lib/time";
+import { ChevronDown, Copy } from "lucide-react";
+import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
 type WeekNavigationProps = {
   weekStart: string; // Monday ISO date
@@ -42,11 +40,8 @@ function addWeeks(isoDate: string, weeks: number): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-
 export function WeekNavigation({ weekStart, onCopyWeek }: WeekNavigationProps) {
   const navigate = useNavigate();
-  const thisMonday = getLocalThisMonday();
-  const isCurrentWeek = weekStart === thisMonday;
 
   function goToWeek(monday: string) {
     navigate({ to: "/plan/week/$weekStart", params: { weekStart: monday } });
@@ -62,10 +57,35 @@ export function WeekNavigation({ weekStart, onCopyWeek }: WeekNavigationProps) {
         {"\u2190"}
       </button>
 
-      <div className="flex-1 text-center">
-        <span className="text-base font-semibold text-[var(--ink)]">
-          {formatWeekRange(weekStart)}
-        </span>
+      <div className="flex flex-1 justify-center">
+        <DropdownMenuPrimitive.Root>
+          <DropdownMenuPrimitive.Trigger asChild>
+            <button
+              type="button"
+              className="flex cursor-pointer items-center gap-1.5 rounded-md bg-transparent px-2 py-1 text-base font-semibold text-[var(--ink)] transition-colors hover:text-[var(--terracotta)]"
+              aria-label="Week actions"
+            >
+              {formatWeekRange(weekStart)}
+              <ChevronDown className="size-4 opacity-60" />
+            </button>
+          </DropdownMenuPrimitive.Trigger>
+
+          <DropdownMenuPrimitive.Portal>
+            <DropdownMenuPrimitive.Content
+              align="center"
+              sideOffset={6}
+              className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 z-50 min-w-[11rem] overflow-hidden rounded-lg border border-[var(--rule)] bg-[var(--white)] p-1 shadow-lg"
+            >
+              <DropdownMenuPrimitive.Item
+                onSelect={onCopyWeek}
+                className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--ink)] outline-none transition-colors focus:bg-[var(--paper)] focus:text-[var(--terracotta)]"
+              >
+                <Copy className="size-3.5" />
+                Copy week
+              </DropdownMenuPrimitive.Item>
+            </DropdownMenuPrimitive.Content>
+          </DropdownMenuPrimitive.Portal>
+        </DropdownMenuPrimitive.Root>
       </div>
 
       <button
@@ -75,25 +95,6 @@ export function WeekNavigation({ weekStart, onCopyWeek }: WeekNavigationProps) {
       >
         {"\u2192"}
       </button>
-
-      {!isCurrentWeek && (
-        <button
-          className="cursor-pointer rounded-lg border border-[var(--rule)] bg-[var(--white)] px-3 py-1.5 text-sm font-medium text-[var(--ink)] hover:border-[var(--terracotta)] hover:text-[var(--terracotta)]"
-          onClick={() => goToWeek(thisMonday)}
-        >
-          This week
-        </button>
-      )}
-
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onCopyWeek}
-        className="ml-1 gap-1.5 text-sm"
-      >
-        <Copy className="size-3" />
-        Copy week
-      </Button>
     </div>
   );
 }
