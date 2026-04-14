@@ -120,4 +120,4 @@ npm run db:push       # Push schema to local SQLite (dev only)
 
 ## License
 
-Personal project — no license attached. Fork freely for your own use.
+[MIT](LICENSE) © Fletcher Easton
