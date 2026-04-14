@@ -26,7 +26,7 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col">
+    <div className="flex flex-col">
       <WeekNavigation
         weekStart={weekStart}
         onCopyWeek={() => setCopyWeekOpen(true)}
@@ -47,7 +47,7 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
         </div>
 
         {/* Mobile layout */}
-        <div className="px-4 py-6 md:hidden">
+        <div className="px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] md:hidden">
           <p className="mb-4 text-center text-sm font-medium text-[var(--ink-soft)]">
             Switch to desktop for week view. Tap a day below:
           </p>
