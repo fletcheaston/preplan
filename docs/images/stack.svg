@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180" role="img" aria-label="Tech stack: TanStack Start, Drizzle ORM, Cloudflare Workers with D1">
+  <rect width="720" height="180" fill="#FAF7F2"/>
+  <rect width="720" height="180" fill="none" stroke="#D8D0C4"/>
+
+  <!-- Three pillars, separated by thin rules -->
+  <line x1="240" y1="28" x2="240" y2="152" stroke="#D8D0C4" stroke-width="1"/>
+  <line x1="480" y1="28" x2="480" y2="152" stroke="#D8D0C4" stroke-width="1"/>
+
+  <!-- Column 1: Frontend -->
+  <text x="120" y="54" font-family="'DM Mono', ui-monospace, monospace" font-size="10" letter-spacing="2" fill="#524C47" text-anchor="middle">FRONTEND</text>
+  <text x="120" y="90" font-family="Georgia, 'Times New Roman', serif" font-weight="600" font-size="18" fill="#2C2C2C" text-anchor="middle">TanStack Start</text>
+  <text x="120" y="114" font-family="Georgia, 'Times New Roman', serif" font-size="13" fill="#524C47" text-anchor="middle">React 19</text>
+  <text x="120" y="132" font-family="Georgia, 'Times New Roman', serif" font-size="13" fill="#524C47" text-anchor="middle">Tailwind v4</text>
+
+  <!-- Column 2: Data -->
+  <text x="360" y="54" font-family="'DM Mono', ui-monospace, monospace" font-size="10" letter-spacing="2" fill="#524C47" text-anchor="middle">DATA</text>
+  <text x="360" y="90" font-family="Georgia, 'Times New Roman', serif" font-weight="600" font-size="18" fill="#2C2C2C" text-anchor="middle">Drizzle ORM</text>
+  <text x="360" y="114" font-family="Georgia, 'Times New Roman', serif" font-size="13" fill="#524C47" text-anchor="middle">SQLite dialect</text>
+  <text x="360" y="132" font-family="Georgia, 'Times New Roman', serif" font-size="13" fill="#524C47" text-anchor="middle">Zod validation</text>
+
+  <!-- Column 3: Platform -->
+  <text x="600" y="54" font-family="'DM Mono', ui-monospace, monospace" font-size="10" letter-spacing="2" fill="#524C47" text-anchor="middle">PLATFORM</text>
+  <text x="600" y="90" font-family="Georgia, 'Times New Roman', serif" font-weight="600" font-size="18" fill="#2C2C2C" text-anchor="middle">Cloudflare Workers</text>
+  <text x="600" y="114" font-family="Georgia, 'Times New Roman', serif" font-size="13" fill="#524C47" text-anchor="middle">D1 database</text>
+  <text x="600" y="132" font-family="Georgia, 'Times New Roman', serif" font-size="13" fill="#524C47" text-anchor="middle">Google OAuth</text>
+</svg>

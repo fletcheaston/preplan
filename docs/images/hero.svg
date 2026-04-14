@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="Preplan — Plan your day, backwards">
+  <defs>
+    <pattern id="dotgrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.8" fill="#D8D0C4"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="360" fill="#F5F0E8"/>
+  <rect width="1200" height="360" fill="url(#dotgrid)"/>
+
+  <!-- Subtle top/bottom rules -->
+  <rect x="0" y="0" width="1200" height="1" fill="#D8D0C4"/>
+  <rect x="0" y="359" width="1200" height="1" fill="#D8D0C4"/>
+
+  <!-- Wordmark -->
+  <text x="600" y="175" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="124" fill="#2C2C2C" text-anchor="middle" dominant-baseline="middle">Preplan</text>
+
+  <!-- Terracotta underline accent -->
+  <rect x="530" y="215" width="140" height="6" rx="3" fill="#C4705A"/>
+
+  <!-- Tagline -->
+  <text x="600" y="270" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="22" fill="#524C47" text-anchor="middle">Plan your day, backwards.</text>
+
+  <!-- Small mono label top left -->
+  <text x="48" y="48" font-family="'DM Mono', ui-monospace, monospace" font-size="11" letter-spacing="2" fill="#524C47">PREPLAN · 2026</text>
+
+  <!-- Small mono label top right -->
+  <text x="1152" y="48" font-family="'DM Mono', ui-monospace, monospace" font-size="11" letter-spacing="2" fill="#524C47" text-anchor="end">WK 15 · MON</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="440" viewBox="0 0 720 440" role="img" aria-label="A backward-cascading chain: events cascade from a fixed anchor time">
+  <!-- Background -->
+  <rect width="720" height="440" fill="#FAF7F2"/>
+  <rect x="0" y="0" width="720" height="440" fill="none" stroke="#D8D0C4" stroke-width="1"/>
+
+  <!-- Left terracotta stripe (signature chain marker) -->
+  <rect x="0" y="0" width="3" height="440" fill="#C4705A"/>
+
+  <!-- Chain header -->
+  <text x="40" y="52" font-family="Georgia, 'Times New Roman', serif" font-weight="600" font-size="22" fill="#2C2C2C">Morning routine</text>
+  <text x="680" y="52" font-family="'DM Mono', ui-monospace, monospace" font-size="16" fill="#524C47" text-anchor="end">← 09:00</text>
+
+  <!-- Divider -->
+  <rect x="40" y="72" width="640" height="1" fill="#E8E2D8"/>
+
+  <!-- Timeline vertical line -->
+  <line x1="120" y1="110" x2="120" y2="380" stroke="#D8D0C4" stroke-width="1.5" stroke-dasharray="3 4"/>
+
+  <!-- Event 1: Shower + breakfast -->
+  <circle cx="120" cy="125" r="5" fill="#FAF7F2" stroke="#2C2C2C" stroke-width="1.5"/>
+  <text x="72" y="131" font-family="'DM Mono', ui-monospace, monospace" font-size="14" fill="#524C47" text-anchor="end">07:00</text>
+  <text x="150" y="122" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#2C2C2C">Shower + breakfast</text>
+  <text x="150" y="142" font-family="'DM Mono', ui-monospace, monospace" font-size="12" fill="#524C47">45m</text>
+
+  <!-- Event 2: Workout -->
+  <circle cx="120" cy="210" r="5" fill="#FAF7F2" stroke="#2C2C2C" stroke-width="1.5"/>
+  <text x="72" y="216" font-family="'DM Mono', ui-monospace, monospace" font-size="14" fill="#524C47" text-anchor="end">07:45</text>
+  <text x="150" y="207" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#2C2C2C">Morning workout</text>
+  <text x="150" y="227" font-family="'DM Mono', ui-monospace, monospace" font-size="12" fill="#524C47">1h</text>
+
+  <!-- Event 3: Wake up -->
+  <circle cx="120" cy="295" r="5" fill="#FAF7F2" stroke="#2C2C2C" stroke-width="1.5"/>
+  <text x="72" y="301" font-family="'DM Mono', ui-monospace, monospace" font-size="14" fill="#524C47" text-anchor="end">08:45</text>
+  <text x="150" y="292" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#2C2C2C">Get ready</text>
+  <text x="150" y="312" font-family="'DM Mono', ui-monospace, monospace" font-size="12" fill="#524C47">15m</text>
+
+  <!-- Anchor -->
+  <circle cx="120" cy="370" r="8" fill="#C4705A"/>
+  <circle cx="120" cy="370" r="14" fill="none" stroke="#C4705A" stroke-width="1.5" opacity="0.4"/>
+  <text x="72" y="376" font-family="'DM Mono', ui-monospace, monospace" font-weight="500" font-size="14" fill="#C4705A" text-anchor="end">09:00</text>
+  <text x="150" y="367" font-family="Georgia, 'Times New Roman', serif" font-weight="600" font-size="17" fill="#C4705A">Work starts</text>
+  <text x="150" y="387" font-family="'DM Mono', ui-monospace, monospace" font-size="12" letter-spacing="1" fill="#C4705A">ANCHOR</text>
+
+  <!-- Side annotation: direction arrow -->
+  <g opacity="0.85">
+    <line x1="560" y1="180" x2="560" y2="330" stroke="#524C47" stroke-width="1.25"/>
+    <polyline points="555,185 560,175 565,185" fill="none" stroke="#524C47" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="580" y="220" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="14" fill="#524C47">cascades</text>
+    <text x="580" y="240" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="14" fill="#524C47">backward</text>
+    <text x="580" y="260" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="14" fill="#524C47">from the</text>
+    <text x="580" y="280" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="14" fill="#524C47">anchor</text>
+  </g>
+</svg>
