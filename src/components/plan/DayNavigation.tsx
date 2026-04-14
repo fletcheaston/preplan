@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useNavigate } from "@tanstack/react-router";
 
-import { addDays, getLocalToday } from "@/lib/time";
+import { addDays } from "@/lib/time";
 
 type DayNavigationProps = {
   date: string; // ISO date YYYY-MM-DD
@@ -32,7 +32,6 @@ export function DayNavigation({ date }: DayNavigationProps) {
   const navigate = useNavigate();
   const [showPicker, setShowPicker] = useState(false);
 
-  const today = getLocalToday();
   const prevDay = addDays(date, -1);
   const nextDay = addDays(date, 1);
 
@@ -92,15 +91,6 @@ export function DayNavigation({ date }: DayNavigationProps) {
       >
         {"\u2192"}
       </button>
-
-      {date !== today && (
-        <button
-          className="cursor-pointer rounded-lg border border-[var(--rule)] bg-[var(--white)] px-3 py-1.5 text-sm font-medium text-[var(--ink)] hover:border-[var(--terracotta)] hover:text-[var(--terracotta)]"
-          onClick={() => goTo(today)}
-        >
-          Today
-        </button>
-      )}
     </div>
   );
 }
