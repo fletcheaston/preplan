@@ -5,7 +5,7 @@ import { Pencil, Plus, RefreshCw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Chain, Event } from "@/db/schema";
 import { $deleteChain, $triggerManualSync } from "@/lib/server/chains";
-import { deriveEventTimes, formatDisplayTime } from "@/lib/time";
+import { formatDisplayTime } from "@/lib/time";
 
 import { AddEventDialog } from "./AddEventDialog";
 import { EditChainDialog } from "./EditChainDialog";
@@ -24,9 +24,8 @@ export function ChainBlock({ chain, events, date, onUpdate }: ChainBlockProps) {
   const [deleting, setDeleting] = useState(false);
   const [syncing, setSyncing] = useState(false);
 
-  // Sort events by sortOrder before deriving times
+  // Sort events by sortOrder before passing to the sortable list
   const sortedEvents = [...events].sort((a, b) => a.sortOrder - b.sortOrder);
-  const derivedEvents = deriveEventTimes(chain, sortedEvents);
 
   async function handleManualSync() {
     setSyncing(true);
@@ -112,9 +111,8 @@ export function ChainBlock({ chain, events, date, onUpdate }: ChainBlockProps) {
             </p>
           ) : (
             <SortableEventList
-              chainId={chain.id}
+              chain={chain}
               events={sortedEvents}
-              derivedEvents={derivedEvents}
               chainDate={date}
               onUpdate={onUpdate}
             />

@@ -6,36 +6,29 @@ import {
 
 import { GripVertical } from "lucide-react";
 
-import type { Event } from "@/db/schema";
+import type { Chain, Event } from "@/db/schema";
 import { useDragReorder } from "@/hooks/useDragReorder";
 import { $reorderEvents } from "@/lib/server/events";
-import {
-  deriveEventTimes,
-  formatDisplayTime,
-  formatDuration,
-} from "@/lib/time";
-import type { DerivedEvent } from "@/lib/time";
+import { deriveEventTimes, formatDisplayTime, formatDuration } from "@/lib/time";
 
 import { SortableEventItem } from "./SortableEventItem";
 
 type SortableEventListProps = {
-  chainId: string;
+  chain: Chain;
   events: Event[];
-  derivedEvents: DerivedEvent[];
   chainDate: string;
   onUpdate: () => void;
 };
 
 export function SortableEventList({
-  chainId,
+  chain,
   events,
-  derivedEvents,
   chainDate,
   onUpdate,
 }: SortableEventListProps) {
   const { sensors, handleDragStart, handleDragEnd, activeId, items } =
     useDragReorder({
-      chainId,
+      chainId: chain.id,
       userId: "",
       events,
       onReorder: (_newOrder) => {
@@ -44,33 +37,20 @@ export function SortableEventList({
       onReorderComplete: async (orderedIds) => {
         try {
           await $reorderEvents({
-            data: { chainId, orderedEventIds: orderedIds },
+            data: { chainId: chain.id, orderedEventIds: orderedIds },
           });
-          onUpdate();
+          // Success: keep optimistic state, no need to invalidate
         } catch (err) {
           console.error("Failed to reorder events:", err);
-          onUpdate(); // refresh to restore server state on error
+          onUpdate(); // roll back to server state on error
         }
       },
     });
 
   const activeEvent = activeId ? items.find((e) => e.id === activeId) : null;
 
-  // Recompute derived times based on current optimistic item order
-  const optimisticDerivedEvents: DerivedEvent[] = items.map((item) => {
-    const found = derivedEvents.find((d) => d.eventId === item.id);
-    return (
-      found ?? {
-        eventId: item.id,
-        name: item.name,
-        durationMinutes: item.durationMinutes,
-        startTime: "00:00",
-        endTime: "00:00",
-        startDay: chainDate,
-        endDay: chainDate,
-      }
-    );
-  });
+  // Derive times locally from the optimistic item order — pure function, no server needed
+  const optimisticDerivedEvents = deriveEventTimes(chain, items);
 
   return (
     <DndContext
