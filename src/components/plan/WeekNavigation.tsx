@@ -1,11 +1,12 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { ChevronDown, Copy } from "lucide-react";
+import { ChevronDown, Download, Upload } from "lucide-react";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
 type WeekNavigationProps = {
   weekStart: string; // Monday ISO date
-  onCopyWeek: () => void;
+  onCopyFromWeek: () => void;
+  onCopyToWeek: () => void;
 };
 
 function formatWeekRange(weekStart: string): string {
@@ -40,7 +41,11 @@ function addWeeks(isoDate: string, weeks: number): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-export function WeekNavigation({ weekStart, onCopyWeek }: WeekNavigationProps) {
+export function WeekNavigation({
+  weekStart,
+  onCopyFromWeek,
+  onCopyToWeek,
+}: WeekNavigationProps) {
   const navigate = useNavigate();
 
   function goToWeek(monday: string) {
@@ -77,11 +82,18 @@ export function WeekNavigation({ weekStart, onCopyWeek }: WeekNavigationProps) {
               className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 z-50 min-w-[11rem] overflow-hidden rounded-lg border border-[var(--rule)] bg-[var(--white)] p-1 shadow-lg"
             >
               <DropdownMenuPrimitive.Item
-                onSelect={onCopyWeek}
+                onSelect={onCopyFromWeek}
                 className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--ink)] outline-none transition-colors focus:bg-[var(--paper)] focus:text-[var(--terracotta)]"
               >
-                <Copy className="size-3.5" />
-                Copy week
+                <Download className="size-3.5" />
+                Copy from another week
+              </DropdownMenuPrimitive.Item>
+              <DropdownMenuPrimitive.Item
+                onSelect={onCopyToWeek}
+                className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--ink)] outline-none transition-colors focus:bg-[var(--paper)] focus:text-[var(--terracotta)]"
+              >
+                <Upload className="size-3.5" />
+                Copy to another week
               </DropdownMenuPrimitive.Item>
             </DropdownMenuPrimitive.Content>
           </DropdownMenuPrimitive.Portal>

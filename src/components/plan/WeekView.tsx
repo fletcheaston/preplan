@@ -5,7 +5,8 @@ import { useNavigate, useRouter } from "@tanstack/react-router";
 import type { ChainWithEvents } from "@/lib/server/chains";
 import { getLocalToday, getWeekDates } from "@/lib/time";
 
-import { CopyWeekDialog } from "./CopyWeekDialog";
+import { CopyFromWeekDialog } from "./CopyFromWeekDialog";
+import { CopyToWeekDialog } from "./CopyToWeekDialog";
 import { DayColumn } from "./DayColumn";
 import { WeekNavigation } from "./WeekNavigation";
 
@@ -17,7 +18,8 @@ type WeekViewProps = {
 export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
   const router = useRouter();
   const navigate = useNavigate();
-  const [copyWeekOpen, setCopyWeekOpen] = useState(false);
+  const [copyFromOpen, setCopyFromOpen] = useState(false);
+  const [copyToOpen, setCopyToOpen] = useState(false);
 
   const weekDates = getWeekDates(weekStart);
 
@@ -29,7 +31,8 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
     <div className="flex flex-col">
       <WeekNavigation
         weekStart={weekStart}
-        onCopyWeek={() => setCopyWeekOpen(true)}
+        onCopyFromWeek={() => setCopyFromOpen(true)}
+        onCopyToWeek={() => setCopyToOpen(true)}
       />
 
       {/* Desktop: 7-column grid */}
@@ -102,10 +105,17 @@ export function WeekView({ weekStart, chainsByDay }: WeekViewProps) {
         </div>
       </main>
 
-      <CopyWeekDialog
-        open={copyWeekOpen}
-        onOpenChange={setCopyWeekOpen}
+      <CopyFromWeekDialog
+        open={copyFromOpen}
+        onOpenChange={setCopyFromOpen}
         targetWeekStart={weekStart}
+        onSuccess={handleUpdate}
+      />
+
+      <CopyToWeekDialog
+        open={copyToOpen}
+        onOpenChange={setCopyToOpen}
+        sourceWeekStart={weekStart}
         onSuccess={handleUpdate}
       />
     </div>
